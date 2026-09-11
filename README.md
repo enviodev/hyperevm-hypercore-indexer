@@ -53,3 +53,6 @@ A GraphQL playground opens on http://localhost:8080. The local admin secret is `
   read through the [Effect API](https://docs.envio.dev/docs/HyperIndex/effect-api) and cached.
 - `scripts/system_txs.py` compares the official RPC's system transactions with what HyperSync returns
   for a fixed block window. It reads `ENVIO_API_TOKEN` from the environment.
+- `scripts/rebuilt_balance.py` rebuilds one address's token balance from `Transfer` logs through HyperSync
+  and compares it with `balanceOf`, showing that credits from HyperCore leave no log.
+- `scripts/monthly.py` pages through `DailyBoundaryStat` on the local Hasura and prints monthly totals.
