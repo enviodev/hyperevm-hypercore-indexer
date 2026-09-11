@@ -1,0 +1,10 @@
+node_modules/
+.envio/
+build/
+generated/
+*.log
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example

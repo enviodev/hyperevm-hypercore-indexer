@@ -1,0 +1,66 @@
+type CoreActionType {
+  id: ID! # action ID from the CoreWriter encoding
+  actionId: Int!
+  name: String!
+  count: Int!
+  senders: Int!
+  firstBlock: Int!
+  lastBlock: Int!
+}
+
+type CoreWriterSender {
+  id: ID! # sender address
+  actions: Int!
+  firstBlock: Int!
+  lastBlock: Int!
+}
+
+type SenderAction {
+  id: ID! # <sender>-<action ID>
+  sender: String! @index
+  actionId: Int! @index
+  count: Int!
+}
+
+type HypeSender {
+  id: ID! # sender address
+  transfers: Int!
+  amount: BigInt!
+}
+
+type SpotTokenToCore {
+  id: ID! # HyperCore token index
+  tokenIndex: Int!
+  name: String!
+  contract: String!
+  transfers: Int!
+  amount: BigInt!
+  senders: Int!
+}
+
+type SpotSender {
+  id: ID! # <token index>-<sender>
+  tokenIndex: Int! @index
+  transfers: Int!
+}
+
+type DailyBoundaryStat {
+  id: ID! # day index, days since 1970-01-01 UTC
+  day: Int! @index
+  coreActions: Int!
+  hypeTransfers: Int!
+  hypeAmount: BigInt!
+  spotTransfers: Int!
+}
+
+type BoundaryTotal {
+  id: ID! # chain ID
+  coreActions: Int!
+  coreWriterSenders: Int!
+  nonVersionOneActions: Int!
+  hypeTransfers: Int!
+  hypeAmount: BigInt!
+  hypeSenders: Int!
+  spotTransfers: Int!
+  unlinkedSystemTransfers: Int!
+}
