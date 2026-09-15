@@ -48,7 +48,7 @@ A GraphQL playground opens on http://localhost:8080. The local admin secret is `
 ## Notes
 
 - HyperSync is the default data source for chain `999`, so no RPC is configured.
-- Which ERC-20 contract is linked to each HyperCore token index comes from Hyperliquid's
+- Which EVM contract is linked to each HyperCore token index comes from Hyperliquid's
   [`spotMeta` info endpoint](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint/spot),
   read through the [Effect API](https://docs.envio.dev/docs/HyperIndex/effect-api) and cached.
 - `scripts/system_txs.py`, `scripts/rebuilt_balance.py` and `scripts/decode_usdc_wallet.py` read `ENVIO_API_TOKEN`
@@ -60,3 +60,4 @@ A GraphQL playground opens on http://localhost:8080. The local admin secret is `
   and compares it with `balanceOf`, showing that credits from HyperCore leave no log.
 - `scripts/monthly.py` pages through `DailyBoundaryStat` on the local Hasura and prints monthly totals.
 - `scripts/decode_usdc_wallet.py` decodes the CoreWriter actions and `Transfer` logs of Circle's CoreDepositWallet, the contract `spotMeta` links to USDC, over a fixed 100,000 block window.
+- `scripts/credits.py` decodes the system transactions the official RPC lists for a fixed block window into readable credits from HyperCore. It needs no token.
