@@ -1,4 +1,4 @@
-import os, json, urllib.request
+import os, json, time, urllib.request, urllib.error
 
 TOKEN = os.environ["ENVIO_API_TOKEN"]
 HYPERSYNC = "https://hyperliquid.hypersync.xyz"
@@ -11,26 +11,32 @@ TRANSFER = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
 HOLDER_TOPIC = "0x" + "0" * 24 + HOLDER[2:]
 
 def post(url, body, headers={}):
-    req = urllib.request.Request(
-        url,
-        data=json.dumps(body).encode(),
-        headers={"Content-Type": "application/json", **headers},
-    )
-    with urllib.request.urlopen(req, timeout=120) as r:
-        return json.loads(r.read())
+    for attempt in range(6):
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(body).encode(),
+            headers={"Content-Type": "application/json", **headers},
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=120) as r:
+                return json.loads(r.read())
+        except urllib.error.HTTPError as e:
+            if e.code != 429:
+                raise
+            time.sleep(10 * (attempt + 1))  # rate limited, wait and retry
+    raise RuntimeError("still rate limited after retries")
 
-with urllib.request.urlopen(f"{HYPERSYNC}/height") as r:
-    height = json.loads(r.read())["height"]
+END = 45_628_968  # stop at the same block as the rest of the post, so the counts stay fixed
 
 def total(topics):
-    """Count and sum every matching Transfer log across the chain's history."""
+    """Count and sum every matching Transfer log from genesis up to END."""
     amount, count, block = 0, 0, 0
-    while block < height:
+    while block < END:
         d = post(
             f"{HYPERSYNC}/query",
             {
                 "from_block": block,
-                "to_block": height,
+                "to_block": END,
                 "logs": [{"address": [CONTRACT], "topics": topics}],
                 "field_selection": {"log": ["data"]},
             },
@@ -52,7 +58,8 @@ call = {"to": CONTRACT, "data": "0x70a08231" + HOLDER_TOPIC[2:]}  # balanceOf
 body = {"jsonrpc": "2.0", "id": 1, "method": "eth_call", "params": [call, "latest"]}
 balance = int(post(RPC, body)["result"], 16)
 
+print(f"Up to block {END - 1:,}")
 print(f"Transfer logs received: {logs_in}, total {received:,}")
 print(f"Transfer logs sent: {logs_out}, total {sent:,}")
 print(f"Balance rebuilt from logs: {received - sent:,}")
-print(f"balanceOf on the official RPC: {balance:,}")
+print(f"balanceOf on the official RPC when run: {balance:,}")

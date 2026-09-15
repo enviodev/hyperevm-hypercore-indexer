@@ -3,8 +3,8 @@ name: hyperevm-hypercore-indexer
 description: What HyperEVM sends to HyperCore, indexed on HyperEVM (chain 999)
 
 contracts:
-  # Hyperliquid's CoreWriter system contract. Every action a HyperEVM account
-  # or contract sends to HyperCore is emitted here as one RawAction log.
+  # Hyperliquid's CoreWriter system contract. Every action sent from HyperEVM
+  # to HyperCore through CoreWriter is emitted here as one RawAction log.
   - name: CoreWriter
     events:
       - event: "RawAction(address indexed user, bytes data)"

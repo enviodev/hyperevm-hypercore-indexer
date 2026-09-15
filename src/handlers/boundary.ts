@@ -54,15 +54,17 @@ const loadSpotMeta = () =>
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ type: "spotMeta" }),
-  }).then(async (res) => {
-    if (!res.ok) {
-      spotMeta = undefined;
-      throw new Error(`spotMeta request failed with ${res.status}`);
-    }
-    return (await res.json()) as SpotMeta;
-  }));
+  })
+    .then(async (res) => {
+      if (!res.ok) throw new Error(`spotMeta request failed with ${res.status}`);
+      return (await res.json()) as SpotMeta;
+    })
+    .catch((error) => {
+      spotMeta = undefined; // don't keep a failed request, so the next call retries
+      throw error;
+    }));
 
-// Which ERC-20 contract HyperCore links to a token index, from Hyperliquid's
+// Which EVM contract HyperCore links to a token index, from Hyperliquid's
 // spotMeta endpoint. Cached, so each index is looked up once per sync.
 const getLinkedToken = createEffect(
   {

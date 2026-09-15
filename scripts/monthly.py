@@ -32,7 +32,7 @@ while True:
 
 months = collections.defaultdict(lambda: [0, 0, 0])
 for row in rows:
-    month = datetime.datetime.fromtimestamp(row["day"] * 86_400, datetime.UTC)
+    month = datetime.datetime.fromtimestamp(row["day"] * 86_400, datetime.timezone.utc)
     totals = months[month.strftime("%Y-%m")]
     totals[0] += row["coreActions"]
     totals[1] += row["hypeTransfers"]
