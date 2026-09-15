@@ -61,3 +61,4 @@ A GraphQL playground opens on http://localhost:8080. The local admin secret is `
 - `scripts/monthly.py` pages through `DailyBoundaryStat` on the local Hasura and prints monthly totals.
 - `scripts/decode_usdc_wallet.py` decodes the CoreWriter actions and `Transfer` logs of Circle's CoreDepositWallet, the contract `spotMeta` links to USDC, over a fixed 100,000 block window.
 - `scripts/credits.py` decodes the system transactions the official RPC lists for a fixed block window into readable credits from HyperCore. It needs no token.
+- `scripts/check_hypercore.py` looks up each CoreWriter limit order and `Send asset` in a fixed 50-block window on Hyperliquid's info endpoint, by client order ID or in the sender's ledger. It needs no token.
