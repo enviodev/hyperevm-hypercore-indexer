@@ -4,7 +4,7 @@ from decimal import Decimal
 RPC = "https://rpc.hyperliquid.xyz/evm"
 INFO = "https://api.hyperliquid.xyz/info"
 CORE_WRITER = "0x3333333333333333333333333333333333333333"
-START, END = 45_995_091, 45_995_140  # 50 blocks, the most one public eth_getLogs request allows
+START, END = 45_995_091, 45_995_140  # 50 blocks, the documented limit for one public eth_getLogs request
 
 def post(url, body):
     for attempt in range(6):
